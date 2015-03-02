@@ -46,42 +46,5 @@ PlayerInputComponent.prototype = {
   }
 };
 
-
 module.exports = PlayerInputComponent;
-/*
-var AutoInputComponent = function(game) {
-  this.game = game;
-  this.direction = 1;
-};
-
-AutoInputComponent.prototype = {
-  getDirection: function() {
-    var staySame = Math.floor(Math.random() * 100) + 1;
-    if (staySame < 95) {
-      return this.direction;
-    }
-    this.direction = Math.floor(Math.random() * 4) + 1;
-    return this.direction;
-  },
-  update: function(component) {
-    switch (this.getDirection()) {
-      case 1:
-        component.moveUp();
-        break;
-      case 2:
-        component.moveDown();
-        break;
-      case 3:
-        component.moveLeft();
-        break;
-      case 4:
-        component.moveRight();
-        break;
-      default:
-        break;
-    }
-  }
-};
-*/
-
 }());

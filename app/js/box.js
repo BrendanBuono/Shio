@@ -9,7 +9,7 @@ function Box(game) {
 }
 Box.prototype = {
   initialize: function() {
-    //this.components.push(new PlayerInputComponent(this.game));
+
   },
   addComponent: function(c) {
     this.components.push(c);

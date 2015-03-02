@@ -15,7 +15,7 @@ function Game(canvas) {
   this.fps = 0;
   this.updateFps = false;
   this.gameObjects = [];
-  this.paused = false; 
+  this.paused = false;
 }
 Game.prototype = {
 
@@ -69,12 +69,9 @@ Game.prototype = {
   draw: function() {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    //this.drawFramesPerSecond();
-
-    for (var i = 0; i < this.gameObjects.length; i++) {
+  for (var i = 0; i < this.gameObjects.length; i++) {
       this.gameObjects[i].draw(this.ctx);
     }
-    //this.ctx.drawImage(this.offScreenCanvas,0,0);
   }
 };
 
