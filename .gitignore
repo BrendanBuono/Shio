@@ -1,0 +1,4 @@
+node_modules/
+debug/
+prod/
+npm-debug.log
