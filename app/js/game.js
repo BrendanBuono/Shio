@@ -1,5 +1,6 @@
 (function(){
 var KeyboardInput = require('./keyboard.js');
+var GuidGenerator = require('./Utility/UUIDjs.js');
 var debug = true;
 function Game(canvas) {
   this.canvas = document.getElementById(canvas);
@@ -35,7 +36,9 @@ Game.prototype = {
       me.updateFps = true;
     }, 1000);
   },
-
+  getGuid : function(){
+    return GuidGenerator.create();
+  },
   calculateFramesPerSecond: function() {
     var thisTick = new Date();
     if (this.updateFps) {

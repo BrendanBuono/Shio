@@ -4,6 +4,7 @@ function Box(game) {
   this.y = 10;
   this.velocity = new Vector2(0, 0);
   this.acceleration = new Vector2(0, 0);
+  this.guid = game.getGuid();
   this.game = game;
   this.components = [];
 }
