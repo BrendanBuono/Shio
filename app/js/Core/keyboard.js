@@ -1,8 +1,8 @@
 
 (function(){
 
-  var LinkedList = require('./Utility/LinkedList.js');
-  require('./Utility/utility.js');
+  var LinkedList = require('../Utility/LinkedList.js');
+  require('../Utility/utility.js');
   var userInput = require('./input.js');
   var keyboardCodes = {
     backspace: 8,

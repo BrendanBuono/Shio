@@ -1,4 +1,4 @@
-var Vector2 = require('./Physics/Vector2.js');
+var Vector2 = require('../Physics/Vector2.js');
 function Box(game) {
   this.x = 10;
   this.y = 10;

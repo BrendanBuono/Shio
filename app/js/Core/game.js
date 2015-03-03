@@ -1,6 +1,6 @@
 (function(){
 var KeyboardInput = require('./keyboard.js');
-var GuidGenerator = require('./Utility/UUIDjs.js');
+var GuidGenerator = require('../Utility/UUIDjs.js');
 var debug = true;
 function Game(canvas) {
   this.canvas = document.getElementById(canvas);
