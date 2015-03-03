@@ -1,7 +1,10 @@
-h1. Shio Game Engine
+# Shio 2D HTML5 Video Game Engine
 
-#h2. Dev build
+## Dev build
+```
 grunt
-
-h3. Production Build
+```
+## Production Build
+```
 grunt prod
+```
