@@ -2,7 +2,7 @@
 (function(){
 
   var LinkedList = require('../Utility/LinkedList.js');
-  require('../Utility/utility.js');
+  require('../Namespaces/Utility.js');
   var userInput = require('./input.js');
   var keyboardCodes = {
     backspace: 8,
@@ -133,7 +133,9 @@
           case keyboardCodes.downArrow:
             this.queue.add(userInput.down);
             break;
-
+          case keyboardCodes.escape:
+            this.queue.add(userInput.pause);
+            break;
         }
         this.keyFired[code] = true;
       }

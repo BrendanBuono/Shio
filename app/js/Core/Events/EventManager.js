@@ -1,22 +1,22 @@
 (function(){
   'use strict';
-  require('../Utility/utility.js');
+  require('../../Namespaces/Utility.js');
 
   function EventManager(){
-      this.registeredEventHandlerss = [].repeat([],256);
+      this.registeredEventHandlers = [].repeat([],256);
       this.queuedEvents = [];
   }
   EventManager.prototype = {
      register : function(parent,handler,eventType){
-          this.registeredEventHandlerss[eventType].push(handler.bind(parent));
+          this.registeredEventHandlers[eventType].push(handler.bind(parent));
      },
      unregister : function(handler,eventType){
-       var eventHandler = this.registeredEventHandlerss[eventType];
+       var eventHandler = this.registeredEventHandlers[eventType];
        var index = eventHandler.indexOf(handler);
-       this.registeredEventHandlerss[eventType] = eventHandler.splice(index,1);
+       this.registeredEventHandlers[eventType] = eventHandler.splice(index,1);
      },
      fireEvent : function(ev){
-       var eventHandler = this.registeredEventHandlerss[ev.EventType];
+       var eventHandler = this.registeredEventHandlers[ev.EventType];
        for(var i =0;i<eventHandler.length;i++){
          eventHandler[i](ev);
        }
