@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  require('./utility.js');
+  require('../Namespaces/Utility.js');
 
   var LinkedList = function(size){
     this.array = [].repeat(0,size);
