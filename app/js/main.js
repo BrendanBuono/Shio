@@ -1,7 +1,7 @@
 var PlayerInputComponent = require('./Components/InputComponent.js');
 var PhysicsComponent = require('./Components/PhysicsComponent.js');
-var Box = require('./box.js');
-var Game = require('./game.js');
+var Box = require('./Core/box.js');
+var Game = require('./Core/game.js');
 
 var init = function(){
   var g = new Game('game');
