@@ -79,7 +79,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
-  grunt.registerTask('default', ['jshint', 'browserify:dev', 'copy:dev', 'browserSync', 'watch']);
-  grunt.registerTask('prod', ['jshint', 'browserify:prod', 'copy:prod']);
-  grunt.registerTask('test',['browserify:specs','jasmine'])
+  grunt.registerTask('default', ['jshint', /*'browserify:specs','jasmine',*/ 'browserify:dev', 'copy:dev', 'browserSync', 'watch']);
+  grunt.registerTask('prod', ['jshint', /*'browserify:specs','jasmine',*/ 'browserify:prod', 'copy:prod']);
+  grunt.registerTask('test',['browserify:specs','jasmine']);
 };
