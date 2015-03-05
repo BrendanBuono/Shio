@@ -1,10 +1,11 @@
 (function(){
   'use strict';
-  require('../../Namespaces/Utility.js');
+  var Utility = require('../../Namespaces/Utility.js');
 
   function EventManager(){
       this.registeredEventHandlers = [].repeat([],256);
-      this.queuedEvents = [];
+      this.queuedEvents = new Utility.Queue(1024, null);
+
   }
   EventManager.prototype = {
      register : function(parent,handler,eventType){
@@ -26,10 +27,9 @@
      },
      update : function(maxMillis){
        var startMillis = new Date().getTime();
-       for(var i =0;i<this.queuedEvents.length;i++){
-         var ev = this.queuedEvents[i];
+       for(var i =0;i<this.queuedEvents.length();i++){
+         var ev = this.queuedEvents.pop();
          this.fireEvent(ev);
-         this.queuedEvents = this.queuedEvents.splice(0,1);
          if(this._exceededTime(startMillis,maxMillis)){
            break;
          }
