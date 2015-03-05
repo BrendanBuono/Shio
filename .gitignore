@@ -1,4 +1,5 @@
 node_modules/
 debug/
 prod/
+test/specs.js
 npm-debug.log

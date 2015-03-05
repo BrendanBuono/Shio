@@ -19,6 +19,15 @@ module.exports = function(grunt) {
         src: ['app/js/main.js'],
         dest: './debug/app/js/bundle.js'
       },
+      specs: {
+    		src: ["test/**/*.test.js"],
+    		dest: "test/specs.js",
+    		options: {
+    			browserifyOptions: {
+    				debug: true
+    			   }
+           }
+		  },
       prod: {
         options: {
           debug: false
@@ -48,6 +57,16 @@ module.exports = function(grunt) {
       }
 
     },
+    jasmine: {
+    	tests: {
+    		src: [],
+    		options: {
+    			outfile: "test/_SpecRunner.html",
+    			//keepRunner: true,
+    			specs: "test/specs.js"
+    		}
+    	}
+    },
     watch: {
       files: ['<%= jshint.files %>', 'app/*.html'],
       tasks: ['jshint', 'browserify:dev','copy','browserSync']
@@ -59,6 +78,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.registerTask('default', ['jshint', 'browserify:dev', 'copy:dev', 'browserSync', 'watch']);
   grunt.registerTask('prod', ['jshint', 'browserify:prod', 'copy:prod']);
+  grunt.registerTask('test',['browserify:specs','jasmine'])
 };
