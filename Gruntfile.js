@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     jshint: {
-      files: ['Gruntfile.js', 'app/js/**/*.js', 'app/test/**/*.js'],
+      all: ['Gruntfile.js', 'app/js/**/*.js', 'app/test/**/*.js','!app/test/specs.js'],
       options: {
         globals: {
           jQuery: false
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         dest: './debug/app/js/bundle.js'
       },
       specs: {
-    		src: ["test/**/*.test.js"],
+    		src: ["app/test/**/*.test.js"],
     		dest: "test/specs.js",
     		options: {
     			browserifyOptions: {
@@ -81,5 +81,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.registerTask('default', ['jshint', /*'browserify:specs','jasmine',*/ 'browserify:dev', 'copy:dev', 'browserSync', 'watch']);
   grunt.registerTask('prod', ['jshint', /*'browserify:specs','jasmine',*/ 'browserify:prod', 'copy:prod']);
-  grunt.registerTask('test',['browserify:specs','jasmine']);
+  grunt.registerTask('test',['jshint','browserify:specs','jasmine']);
 };

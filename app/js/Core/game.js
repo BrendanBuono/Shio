@@ -1,6 +1,6 @@
 (function(){
 var Shio = Shio || {};
-var KeyboardInput = require('./keyboard.js');
+var KeyboardInput = require('./keyboardInput.js');
 Shio.Utility = require('../Namespaces/Utility.js');
 Shio.Events = require('../Namespaces/Events.js');
 Shio.Events.EventManager = require('./Events/EventManager.js');

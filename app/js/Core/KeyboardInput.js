@@ -3,7 +3,7 @@
 
   var LinkedList = require('../Utility/LinkedList.js');
   require('../Namespaces/Utility.js');
-  var userInput = require('./input.js');
+  var userInput = require('./userInput.js');
   var keyboardCodes = {
     backspace: 8,
     tab: 9,

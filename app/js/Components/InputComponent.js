@@ -1,7 +1,7 @@
 (function(){
 var Vector2 = require('../Physics/Vector2.js');
 var LinkedList = require('../Utility/LinkedList.js');
-var userInput = require('../Core/input.js');
+var userInput = require('../Core/userInput.js');
 var GamePausedEvent = require('../Core/Events/GamePausedEvent.js');
 var PlayerInputComponent = function(game) {
   this.game = game;
