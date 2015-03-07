@@ -143,7 +143,9 @@
     end: function(e) {
       var code = e.keyCode;
       switch (code) {
-        case keyboardCodes.leftArrow || keyboardCodes.rightArrow || keyboardCodes.upArrow || keyboardCodes.downArrow:
+        case keyboardCodes.leftArrow:
+        case keyboardCodes.rightArrow:
+        case keyboardCodes.downArrow:
           this.queue.add(userInput.stop);
           break;
       }
