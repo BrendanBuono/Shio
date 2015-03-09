@@ -5,6 +5,7 @@ Shio.Utility = require('../Namespaces/Utility.js');
 Shio.Events = require('../Namespaces/Events.js');
 Shio.Events.EventManager = require('./Events/EventManager.js');
 Shio.Events.EventType = require('./Events/EventType.js');
+Shio.ResourceLoader = require('./ResourceLoader.js');
 var debug = true;
 function Game(canvas) {
   this.canvas = document.getElementById(canvas);
@@ -20,6 +21,7 @@ function Game(canvas) {
   this.updateFps = false;
   this.gameObjects = [];
   this.paused = false;
+  this.ResourceLoader = new Shio.ResourceLoader(this.ctx);
   this.EventManager = new Shio.Events.EventManager();
 }
 Game.prototype = {
@@ -59,6 +61,7 @@ Game.prototype = {
     this.EventManager.update(500);
     if (!this.paused) {
       this.calculateFramesPerSecond();
+
       for (var i = 0; i < this.gameObjects.length; i++) {
         this.gameObjects[i].update();
       }
@@ -80,7 +83,7 @@ Game.prototype = {
   },
   draw: function() {
     this.ctx.clearRect(0, 0, this.width, this.height);
-
+    this.ResourceLoader.loadLevel();
   for (var i = 0; i < this.gameObjects.length; i++) {
       this.gameObjects[i].draw(this.ctx);
     }

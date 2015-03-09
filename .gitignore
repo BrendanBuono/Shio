@@ -1,6 +1,0 @@
-node_modules/
-debug/
-prod/
-app/test/specs.js
-npm-debug.log
-test/specs.js
