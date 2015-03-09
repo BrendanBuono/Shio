@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 
       },
       options: {
-        watchTask: true,
+        watchTask: false,
         server: './debug/app/'
       }
 
@@ -82,4 +82,5 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', /*'browserify:specs','jasmine',*/ 'browserify:dev', 'copy:dev', 'browserSync', 'watch']);
   grunt.registerTask('prod', ['jshint', /*'browserify:specs','jasmine',*/ 'browserify:prod', 'copy:prod']);
   grunt.registerTask('test',['jshint','browserify:specs','jasmine']);
+  grunt.registerTask('no-watch',['jshint','browserify:dev','copy:dev','browserSync']);
 };
