@@ -1,10 +1,10 @@
 var Vector2 = require('../Physics/Vector2.js');
-function Box(game) {
+function Box(guid) {
   this.x = 10;
   this.y = 10;
   this.velocity = new Vector2(0, 0);
   this.acceleration = new Vector2(0, 0);
-  this.guid = game.getGuid();
+  this.guid = guid;
   this.game = game;
   this.components = [];
 }
