@@ -83,7 +83,6 @@ Game.prototype = {
   },
   draw: function() {
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ResourceLoader.loadLevel();
   for (var i = 0; i < this.gameObjects.length; i++) {
       this.gameObjects[i].draw(this.ctx);
     }
