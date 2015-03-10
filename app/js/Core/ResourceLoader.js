@@ -1,6 +1,9 @@
 (function(){
-  function ResourceLoader(context){
-    this.context= context;
+  var Sprite = require('../Graphics/Sprite.js');
+  function ResourceLoader(){
+    this.gameData = {};
+    this.sprites = [];
+
   }
   ResourceLoader.prototype = {
     _loadResource : function(resource, callback){
@@ -15,19 +18,22 @@
       httpRequest.open('GET','/'+resource,true);
       httpRequest.send(null);
     },
-    drawImg : function(dataURL,width,height,left,top){
-      var img = new Image();
-      img.src = dataURL;
-      this.context.drawImage(img,0,0);
-
+    _loadSprites : function(){
+      var sprs = this.gameData.sprites;
+      for(var i = 0; i < sprs.length;i++){
+        var name = sprs[i].name;
+        var source = sprs[i].source;
+        var sprite = new Sprite(name,source);
+        this.sprites.push(sprite);
+      }
     },
-    loadLevel : function(){
-      var me = this;
-  /*    var rock = this._loadResource('RockTile.png',function(image){
-        this.drawImg(image,200,100,0,0);
+    loadGame : function(){
+     this._loadResource('game/game.json',function(r){
+       this.gameData = JSON.parse(r);
+       this._loadSprites();
+       var a  = 1+1;
+     }.bind(this));
 
-      }.bind(this));*/
-      this.drawImg('RockTile.png',200,100,0,0);
     }
   };
  module.exports = ResourceLoader;

@@ -6,15 +6,15 @@ var ResourceLoader = require('./Core/ResourceLoader.js');
 
 var init = function(){
   var g = new Game('game');
-  var rl = new ResourceLoader(g.ctx);
+  var rl = new ResourceLoader();
   g.initialize();
-  var box  = new Box(g);
+  var box  = new Box(g.getGuid());
   box.initialize();
   box.addComponent(new PlayerInputComponent(g));
   box.addComponent(new PhysicsComponent(g));
   g.gameObjects.push(box);
 
-  rl.loadLevel();
+  rl.loadGame();
   var render = function(){
    g.update();
    g.draw();
