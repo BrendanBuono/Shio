@@ -2,3 +2,4 @@
 /debug
 /prod
 /test/specs.js
+app/test/specs.js
