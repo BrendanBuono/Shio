@@ -4,7 +4,9 @@ var EventType = {
   GAME_PAUSED : 2,
   COLLISION : 3,
   ACTOR_CREATED : 4,
-  ACTOR_DESTROYED : 5
+  ACTOR_DESTROYED : 5,
+  INPUT_STARTED: 6,
+  INPUT_STOPPED: 7
 };
 
 module.exports = EventType;
