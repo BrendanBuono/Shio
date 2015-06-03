@@ -1,5 +1,6 @@
 /node_modules
 /debug
 /prod
-/test/specs.js
+/test
 app/test/specs.js
+/.grunt

@@ -3,13 +3,17 @@
   var Utility = require('../../Namespaces/Utility.js');
 
   function EventManager(){
-      this.registeredEventHandlers = [].repeat([],256);
-      this.queuedEvents = new Utility.Queue(1024, null);
+      this.registeredEventHandlers = [];
+      for(var i = 0;i<256;i++){
+        this.registeredEventHandlers[i] = [];
+      }
+      this.queuedEvents = new Utility.Queue();
 
   }
   EventManager.prototype = {
      register : function(parent,handler,eventType){
-          this.registeredEventHandlers[eventType].push(handler.bind(parent));
+       handler.bind(parent);
+          this.registeredEventHandlers[eventType].push(handler);
      },
      unregister : function(handler,eventType){
        var eventHandler = this.registeredEventHandlers[eventType];
@@ -23,12 +27,12 @@
        }
      },
      queueEvent : function(ev){
-        this.queuedEvents.push(ev);
+        this.queuedEvents.enqueue(ev);
      },
      update : function(maxMillis){
        var startMillis = new Date().getTime();
-       for(var i =0;i<this.queuedEvents.length();i++){
-         var ev = this.queuedEvents.pop();
+       for(var i =0;i<this.queuedEvents.size();i++){
+         var ev = this.queuedEvents.dequeue();
          this.fireEvent(ev);
          if(this._exceededTime(startMillis,maxMillis)){
            break;
