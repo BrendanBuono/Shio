@@ -22,12 +22,29 @@
     });
 
     describe('peek',function(){
-      it('looks at the top of the queue',function(){
+      beforeEach(function(){
         for(var i = 0;i<10;i++){
           queue.list.push(i);
         }
+      });
+      it('looks at the top of the queue',function(){
+
         var result = queue.peek();
         expect(result).toBe(9);
+      });
+      it('does not remove item from queue',function(){
+          var beforeSize = queue.list.length;
+          queue.peek();
+          var afterSize = queue.list.length;
+          expect(beforeSize === afterSize).toBe(true);
+      });
+    });
+    describe('size',function(){
+      it('returns the correct size of the queue',function(){
+        for(var i=0;i<10;i++){
+          queue.enqueue(i);
+        }
+        expect(queue.size()).toBe(10);
       });
     });
   });

@@ -16,6 +16,9 @@
     },
     peek : function(){
       return this.list[this.list.length - 1];
+    },
+    size : function(){
+      return this.list.length;
     }
   };
   module.exports = Queue;
