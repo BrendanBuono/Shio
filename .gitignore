@@ -4,3 +4,4 @@
 /test
 app/test/specs.js
 /.grunt
+npm-debug.log
