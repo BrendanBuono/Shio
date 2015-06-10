@@ -18,7 +18,7 @@
      unregister : function(handler,eventType){
        var eventHandler = this.registeredEventHandlers[eventType];
        var index = eventHandler.indexOf(handler);
-       this.registeredEventHandlers[eventType] = eventHandler.splice(index,1);
+       eventHandler.splice(index,1);
      },
      fireEvent : function(ev){
        var eventHandler = this.registeredEventHandlers[ev.EventType];
