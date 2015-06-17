@@ -6,6 +6,7 @@
   beforeEach(function() {
    eventManager = new EventManager();
   });
+
   describe('register', function() {
    var parent = {};
    var handler = function() {};
@@ -27,6 +28,7 @@
     expect(handler.bind).toHaveBeenCalledWith(parent);
    });
   });
+
   describe('unregister', function() {
    var mockRegisteredEventHandlers;
    var eventType = 0;
@@ -43,6 +45,7 @@
     expect(eventManager.registeredEventHandlers[eventType]).toEqual([1, 3, 4]);
    });
   });
+
   describe('queueEvent', function() {
    beforeEach(function() {
 
@@ -60,6 +63,7 @@
     }
    });
   });
+
   describe('fireEvent', function() {
    var eventHandler;
    var event = {
@@ -72,6 +76,43 @@
    it('Calls the event handlers for the fired event', function() {
     eventManager.fireEvent(event);
     expect(eventHandler).toHaveBeenCalledWith(event);
+   });
+  });
+
+  describe('update', function() {
+   var moqFireEvent;
+   var moqEvent;
+   beforeEach(function(){
+    moqFireEvent = jasmine.createSpy();
+    moqEvent = 1;
+    eventManager.fireEvent = moqFireEvent;
+   });
+   it('fires events in event queue',function(){
+    eventManager.queuedEvents.enqueue(moqEvent);
+    eventManager.update(1000);
+    expect(moqFireEvent).toHaveBeenCalledWith(moqEvent);
+   });
+
+   it('stop firing events after exceeding max time',function(){
+    eventManager.queuedEvents.enqueue(moqEvent);
+    eventManager.queuedEvents.enqueue(2);
+    eventManager.queuedEvents.enqueue(3);
+    eventManager._exceededTime = function(a, b){
+     return true;
+    };
+    eventManager.update(1);
+    expect(eventManager.queuedEvents.size()).toBe(2);
+   });
+
+   /**
+   The next test is a little wonky, but I felt like the test was necessary
+   */
+   it('keep events queued that were not fired in the allotted time',function(){
+    eventManager.queuedEvents.enqueue(moqEvent);
+    eventManager.queuedEvents.enqueue(2);
+    eventManager.queuedEvents.enqueue(3);
+    eventManager.update(1);
+    expect(eventManager.queuedEvents.size()).toBe(1);
    });
   });
  });
