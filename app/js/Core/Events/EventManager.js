@@ -1,4 +1,4 @@
-(0function() {
+(function() {
  'use strict';
  var Utility = require('../../Namespaces/Utility.js');
 
