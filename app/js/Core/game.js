@@ -58,7 +58,7 @@ Game.prototype = {
     this.ctx.fillText(Math.floor(this.fps), 10, 10);
   },
   update: function() {
-    this.EventManager.update(500);
+    this.EventManager.update(30);
     if (!this.paused) {
       this.calculateFramesPerSecond();
 

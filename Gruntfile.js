@@ -62,7 +62,7 @@ module.exports = function(grunt) {
     		src: [],
     		options: {
     			outfile: "test/_SpecRunner.html",
-    			//keepRunner: true,
+    			keepRunner: true,
     			specs: "test/specs.js"
     		}
     	}
