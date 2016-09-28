@@ -42,10 +42,7 @@
      _exceededTime : function(startMillis, maxMillis){
        var curMillis = new Date().getTime();
        var elapsedMillis = curMillis - startMillis;
-       if(elapsedMillis > maxMillis){
-         return true;
-       }
-       return false;
+       return elapsedMillis > maxMillis;
      }
   };
 
