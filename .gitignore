@@ -1,7 +1,4 @@
-/node_modules
-/debug
-/prod
-/test
-app/test/specs.js
-/.grunt
+node_modules/
+dist/
 npm-debug.log
+.DS_Store

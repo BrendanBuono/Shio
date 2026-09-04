@@ -1,18 +1,25 @@
 {
   "name": "shio-engine",
-  "version": "0.0.1",
-  "description": "The Shio HTML5 Video Game Engine",
-  "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-browser-sync": "^2.0.0",
-    "grunt-browserify": "~3.4.0",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-jasmine": "^0.8.2",
-    "grunt-contrib-jshint": "~0.11.0",
-    "grunt-contrib-watch": "~0.6.1"
+  "version": "0.1.0",
+  "description": "Shio, a small 2D HTML5 game engine written from scratch as a learning exercise",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
   },
-  "scripts":{
-   "test":"grunt test"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
   }
-
 }
