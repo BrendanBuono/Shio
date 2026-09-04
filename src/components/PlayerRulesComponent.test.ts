@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GameObject } from '../core/GameObject';
-import type { PlayerDiedEvent } from '../events/ActorEvents';
+import type { EnemyStompedEvent, PlayerDiedEvent } from '../events/ActorEvents';
 import { CollisionEvent } from '../events/CollisionEvent';
 import { EventManager } from '../events/EventManager';
 import { EventType } from '../events/EventType';
@@ -11,6 +11,8 @@ function setup() {
   const events = new EventManager();
   const deaths: GameObject[] = [];
   events.register(null, (e: PlayerDiedEvent) => deaths.push(e.player), EventType.PlayerDied);
+  const stomped: GameObject[] = [];
+  events.register(null, (e: EnemyStompedEvent) => stomped.push(e.enemy), EventType.EnemyStomped);
   const rules = new PlayerRulesComponent(events, { bounceSpeed: 100 });
   const hero = new GameObject().addComponent(rules);
   hero.size.set(20, 20);
@@ -18,12 +20,12 @@ function setup() {
   const enemy = new GameObject().moveTo(100, 100);
   enemy.size.set(20, 20);
   enemy.tags.add('enemy');
-  return { events, deaths, rules, hero, enemy };
+  return { events, deaths, stomped, rules, hero, enemy };
 }
 
 describe('PlayerRulesComponent', () => {
   it('stomps an enemy when the feet started above its top, and bounces', () => {
-    const { rules, hero, enemy, events, deaths } = setup();
+    const { rules, hero, enemy, events, deaths, stomped } = setup();
     hero.moveTo(100, 75);
     hero.position.y = 85;
     hero.grounded = true;
@@ -32,6 +34,7 @@ describe('PlayerRulesComponent', () => {
     expect(hero.velocity.y).toBe(-100);
     expect(hero.grounded).toBe(false);
     expect(rules.stomps).toBe(1);
+    expect(stomped).toEqual([enemy]);
     events.update();
     expect(deaths).toEqual([]);
   });

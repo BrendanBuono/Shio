@@ -14,6 +14,9 @@ function fakeContext() {
     clearRect: vi.fn(),
     fillRect: vi.fn(),
     fillText: vi.fn(),
+    save: vi.fn(),
+    restore: vi.fn(),
+    translate: vi.fn(),
     fillStyle: '',
     font: '',
     textAlign: 'start',
@@ -54,6 +57,61 @@ describe('Game', () => {
     expect(game.floorY).toBe(480);
   });
 
+  it('sizes the world from the level when one is set, else from the viewport', () => {
+    expect(game.world.width).toBe(640);
+    game.levelWidth = 2400;
+    expect(game.world.width).toBe(2400);
+    expect(game.worldBounds).toEqual({ x: 0, y: 0, width: 2400, height: 480 });
+    game.groundHeight = 48;
+    expect(game.world.floorY).toBe(432);
+    expect(game.world.viewport).toEqual({ x: 0, y: 0, width: 640, height: 480 });
+  });
+
+  it('follows its target with the camera and offsets world drawing by it', () => {
+    game.levelWidth = 2400;
+    const hero = new Box().moveTo(1000, 100);
+    hero.size.set(48, 48);
+    game.add(hero);
+    game.follow(hero);
+    expect(game.camera.x).toBe(1024 - 320);
+    game.render(0, 1 / 60);
+    expect(ctx.translate).toHaveBeenCalledWith(-704, 0);
+    expect(ctx.fillRect).toHaveBeenCalledWith(1000, 100, 48, 48);
+  });
+
+  it('draws screen-space objects after restoring the camera transform', () => {
+    game.levelWidth = 2400;
+    const hero = new Box().moveTo(1000, 100);
+    game.add(hero);
+    game.follow(hero);
+    const order: string[] = [];
+    ctx.restore.mockImplementation(() => order.push('restore'));
+    const hud = new Box().moveTo(8, 8);
+    hud.screenSpace = true;
+    hud.draw = () => {
+      order.push('hud');
+    };
+    game.add(hud);
+    game.render(0, 1 / 60);
+    expect(order).toEqual(['restore', 'hud']);
+  });
+
+  it('keeps the camera inside the world after a resize', () => {
+    game.levelWidth = 1000;
+    const hero = new Box().moveTo(900, 100);
+    game.add(hero);
+    game.follow(hero);
+    expect(game.camera.x).toBe(360);
+    game.resize(1200, 480);
+    expect(game.camera.x).toBe(0);
+  });
+
+  it('toggles mute with the M key', () => {
+    press(Key.Mute);
+    game.step(1 / 60);
+    expect(game.sound.muted).toBe(true);
+  });
+
   it('raises the floor by the ground height', () => {
     game.groundHeight = 48;
     expect(game.floorY).toBe(432);
@@ -84,7 +142,7 @@ describe('Game', () => {
   });
 
   it('does not update objects while paused', () => {
-    const box = new Box().moveTo(10, 10).addComponent(new PhysicsComponent(game));
+    const box = new Box().moveTo(10, 10).addComponent(new PhysicsComponent(game.world));
     game.add(box);
     game.paused = true;
     game.step(1 / 60);
@@ -95,7 +153,7 @@ describe('Game', () => {
   });
 
   it('survives a keyup with no matching keydown', () => {
-    game.add(new Box().moveTo(10, 10).addComponent(new PhysicsComponent(game)));
+    game.add(new Box().moveTo(10, 10).addComponent(new PhysicsComponent(game.world)));
     release(Key.Left);
     expect(() => game.step(1 / 60)).not.toThrow();
   });
@@ -128,7 +186,7 @@ describe('Game', () => {
     const crate = new GameObject().moveTo(100, 432);
     crate.size.set(48, 48);
     crate.collider = { solid: true, static: true };
-    const hero = new Box().moveTo(110, 380).addComponent(new PhysicsComponent(game));
+    const hero = new Box().moveTo(110, 380).addComponent(new PhysicsComponent(game.world));
     hero.collider = { solid: true };
     const heard: string[] = [];
     hero.addComponent({ update: () => undefined, onCollision: (_o, e) => heard.push(`hero:${e.sideOf(hero)}`) });
@@ -139,6 +197,19 @@ describe('Game', () => {
     expect(hero.grounded).toBe(true);
     expect(heard[0]).toBe('crate:top');
     expect(heard[1]).toBe('hero:bottom');
+  });
+
+  it('reports grounded consistently to components that run after physics', () => {
+    const crate = new GameObject().moveTo(100, 432);
+    crate.size.set(48, 48);
+    crate.collider = { solid: true, static: true };
+    const hero = new Box().moveTo(110, 380).addComponent(new PhysicsComponent(game.world));
+    hero.collider = { solid: true };
+    const seen: boolean[] = [];
+    hero.addComponent({ update: (o) => seen.push(o.grounded) });
+    game.add(crate).add(hero);
+    for (let i = 0; i < 60; i++) game.step(1 / 60);
+    expect(seen.at(-1)).toBe(true);
   });
 
   it('removes an actor when an ActorDestroyed event is drained', () => {

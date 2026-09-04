@@ -2,6 +2,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { GameObject } from '../core/GameObject';
 import { Key, KeyboardInput } from '../core/KeyboardInput';
+import type { PlayerJumpedEvent } from '../events/ActorEvents';
+import { EventManager } from '../events/EventManager';
+import { EventType } from '../events/EventType';
 import { PlayerInputComponent } from './PlayerInputComponent';
 
 describe('PlayerInputComponent', () => {
@@ -49,6 +52,17 @@ describe('PlayerInputComponent', () => {
     obj.grounded = true;
     obj.update(1);
     expect(obj.velocity.y).toBe(-50);
+  });
+
+  it('announces each jump when given an event manager', () => {
+    const events = new EventManager();
+    const jumped: GameObject[] = [];
+    events.register(null, (e: PlayerJumpedEvent) => jumped.push(e.player), EventType.PlayerJumped);
+    const jumper = new GameObject().addComponent(new PlayerInputComponent(input, {}, events));
+    jumper.grounded = true;
+    press(Key.Up);
+    jumper.update(1);
+    expect(jumped).toEqual([jumper]);
   });
 
   it('jumps once per press, not once per step while held', () => {

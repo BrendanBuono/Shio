@@ -20,6 +20,15 @@ describe('TiledGround', () => {
     draw.mockRestore();
   });
 
+  it('only draws the columns inside the viewport when the world has one', () => {
+    const world = { width: 1000, height: 100, floorY: 84, viewport: { x: 250, y: 0, width: 100, height: 100 } };
+    const ground = new TiledGround(world, sheet, { topFrame: 0 });
+    const draw = vi.spyOn(sheet, 'draw').mockImplementation(() => undefined);
+    ground.draw({} as CanvasRenderingContext2D, 0);
+    expect(draw.mock.calls.map(([, , x]) => x)).toEqual([240, 256, 272, 288, 304, 320, 336, 352]);
+    draw.mockRestore();
+  });
+
   it('fills below the floor when there is room', () => {
     const world = { width: 16, height: 64, floorY: 16 };
     const ground = new TiledGround(world, sheet, { topFrame: 0, fillFrame: 1 });

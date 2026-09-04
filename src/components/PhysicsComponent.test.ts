@@ -8,7 +8,10 @@ function simulate(seconds: number, step: number, setup?: (o: GameObject) => void
   const obj = new GameObject().moveTo(100, 0).addComponent(new PhysicsComponent(world, { gravity: 1000 }));
   setup?.(obj);
   const steps = Math.round(seconds / step);
-  for (let i = 0; i < steps; i++) obj.update(step);
+  for (let i = 0; i < steps; i++) {
+    obj.update(step);
+    obj.endStep();
+  }
   return obj;
 }
 
@@ -16,6 +19,7 @@ describe('PhysicsComponent', () => {
   it('accelerates downward under gravity', () => {
     const obj = new GameObject().moveTo(0, 0).addComponent(new PhysicsComponent(world, { gravity: 1000 }));
     obj.update(0.1);
+    obj.endStep();
     expect(obj.velocity.y).toBeCloseTo(100);
     expect(obj.position.y).toBeCloseTo(10);
     expect(obj.grounded).toBe(false);
@@ -44,6 +48,7 @@ describe('PhysicsComponent', () => {
     const obj = simulate(3, 1 / 60);
     obj.velocity.y = -300;
     obj.update(1 / 60);
+    obj.endStep();
     expect(obj.grounded).toBe(false);
     expect(obj.position.y).toBeLessThan(world.floorY - obj.size.y);
   });

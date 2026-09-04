@@ -12,6 +12,8 @@ export interface SpriteSheetDefinition {
 /** The shape of game.json. */
 export interface GameDefinition {
   sprites: SpriteSheetDefinition[];
+  /** Level file to load, resolved relative to game.json. */
+  level?: string;
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -69,5 +71,6 @@ export function parseGameDefinition(data: unknown): GameDefinition {
     if (names.has(sprite.name)) throw new TypeError(`Duplicate sprite name '${sprite.name}'`);
     names.add(sprite.name);
   }
-  return { sprites };
+  if (data.level === undefined) return { sprites };
+  return { sprites, level: nonEmptyString(data.level, 'level') };
 }

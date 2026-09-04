@@ -1,0 +1,60 @@
+{
+  "name": "Level 1",
+  "width": 2400,
+  "spawn": {
+    "x": 40,
+    "y": 40
+  },
+  "objects": [
+    {
+      "type": "crate",
+      "x": 320
+    },
+    {
+      "type": "crate",
+      "x": 368
+    },
+    {
+      "type": "enemy",
+      "x": 640
+    },
+    {
+      "type": "crate",
+      "x": 960
+    },
+    {
+      "type": "crate",
+      "x": 960,
+      "y": -160
+    },
+    {
+      "type": "enemy",
+      "x": 1300
+    },
+    {
+      "type": "crate",
+      "x": 1600
+    },
+    {
+      "type": "crate",
+      "x": 1648
+    },
+    {
+      "type": "crate",
+      "x": 1696
+    },
+    {
+      "type": "crate",
+      "x": 1648,
+      "y": -160
+    },
+    {
+      "type": "enemy",
+      "x": 1900
+    },
+    {
+      "type": "enemy",
+      "x": 2200
+    }
+  ]
+}

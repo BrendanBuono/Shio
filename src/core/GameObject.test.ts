@@ -37,6 +37,18 @@ describe('GameObject', () => {
     expect(calls).toEqual(['a', 'b']);
   });
 
+  it('commits support into grounded only at the end of a step', () => {
+    const obj = new GameObject();
+    obj.support = true;
+    expect(obj.grounded).toBe(false);
+    obj.endStep();
+    expect(obj.grounded).toBe(true);
+    obj.support = false;
+    expect(obj.grounded).toBe(true);
+    obj.endStep();
+    expect(obj.grounded).toBe(false);
+  });
+
   it('exposes its bounds as a rectangle', () => {
     const obj = new GameObject().moveTo(3, 4);
     obj.size.set(5, 6);

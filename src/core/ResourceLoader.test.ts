@@ -26,11 +26,31 @@ describe('ResourceLoader', () => {
       requested.push(url);
       return { width: 96, height: 16 } as HTMLImageElement;
     });
-    const assets = await loader.loadGame('game/game.json');
+    const { assets, level } = await loader.loadGame('game/game.json');
     expect(requested.map((u) => new URL(u).pathname)).toEqual(['/game/sprites/player.png', '/game/sprites/tiles.png']);
     expect(assets.get('player')?.sheet.frameCount).toBe(6);
     expect(assets.get('player')?.animations.idle).toEqual({ frames: [0], fps: 1 });
     expect(assets.get('tiles')?.sheet.frameCount).toBe(24);
+    expect(level).toBeNull();
+  });
+
+  it('loads the level named by the game description, relative to it', async () => {
+    const files: Record<string, unknown> = {
+      '/game/game.json': { sprites: [], level: 'levels/one.json' },
+      '/game/levels/one.json': { name: 'one', width: 900, spawn: { x: 1, y: 2 }, objects: [{ type: 'crate', x: 5 }] },
+    };
+    const loader = new ResourceLoader(async (url) => {
+      const body = files[new URL(url, 'http://localhost/').pathname];
+      return { ok: body !== undefined, status: body ? 200 : 404, statusText: body ? 'OK' : 'Not Found', json: async () => body };
+    });
+    const { level } = await loader.loadGame('/game/game.json');
+    expect(level?.name).toBe('one');
+    expect(level?.objects).toEqual([{ type: 'crate', x: 5 }]);
+  });
+
+  it('rejects a level that fails validation', async () => {
+    const loader = new ResourceLoader(ok({ width: -1 }));
+    await expect(loader.loadLevel('bad.json')).rejects.toThrow('width must be positive');
   });
 
   it('rejects an invalid game description before loading any images', async () => {

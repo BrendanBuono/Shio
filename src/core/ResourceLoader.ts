@@ -1,6 +1,7 @@
 import type { AnimationDefinition } from '../graphics/Animation';
 import { parseGameDefinition } from '../graphics/GameDefinition';
 import { SpriteSheet } from '../graphics/SpriteSheet';
+import { parseLevelDefinition, type LevelDefinition } from './LevelDefinition';
 
 export type FetchLike = (input: string) => Promise<Pick<Response, 'ok' | 'status' | 'statusText' | 'json'>>;
 
@@ -11,6 +12,12 @@ export interface LoadedSprite {
 
 /** Every sprite sheet from a game description, keyed by name. */
 export type GameAssets = ReadonlyMap<string, LoadedSprite>;
+
+export interface LoadedGame {
+  assets: GameAssets;
+  /** The level named by game.json, if any. */
+  level: LevelDefinition | null;
+}
 
 /** Resolves `relative` against the document containing `from`, so sources in game.json sit next to it. */
 export function resolveAssetUrl(relative: string, from: string): string {
@@ -30,17 +37,23 @@ export class ResourceLoader {
     return (await response.json()) as T;
   }
 
-  /** Fetches and validates a game description, then loads every sprite sheet it names in parallel. */
-  async loadGame(url: string): Promise<GameAssets> {
+  /** Fetches and validates a game description, then loads its sprite sheets and level in parallel. */
+  async loadGame(url: string): Promise<LoadedGame> {
     const definition = parseGameDefinition(await this.loadJson(url));
-    const loaded = await Promise.all(
+    const sprites = Promise.all(
       definition.sprites.map(async (sprite): Promise<[string, LoadedSprite]> => {
         const image = await this.loadImage(resolveAssetUrl(sprite.source, url));
         const sheet = new SpriteSheet(sprite.name, image, sprite);
         return [sprite.name, { sheet, animations: sprite.animations }];
       }),
     );
-    return new Map(loaded);
+    const level = definition.level === undefined ? Promise.resolve(null) : this.loadLevel(resolveAssetUrl(definition.level, url));
+    const [loaded, loadedLevel] = await Promise.all([sprites, level]);
+    return { assets: new Map(loaded), level: loadedLevel };
+  }
+
+  async loadLevel(url: string): Promise<LevelDefinition> {
+    return parseLevelDefinition(await this.loadJson(url));
   }
 
   loadImage(url: string): Promise<HTMLImageElement> {

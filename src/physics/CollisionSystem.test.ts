@@ -17,6 +17,7 @@ function run(objects: GameObject[]) {
   const fired: CollisionEvent[] = [];
   events.register(null, (e: CollisionEvent) => fired.push(e), EventType.Collision);
   const count = new CollisionSystem().resolve(objects, events);
+  for (const o of objects) o.endStep();
   return { count, fired };
 }
 
@@ -75,13 +76,24 @@ describe('CollisionSystem', () => {
     expect(hero.velocity.x).toBe(-50);
   });
 
-  it('leaves two static solids alone but still reports them', () => {
+  it('never pushes two static solids sideways but still reports them', () => {
     const a = box(0, 0, { solid: true, static: true });
     const b = box(5, 0, { solid: true, static: true });
     const { fired } = run([a, b]);
     expect(a.position.x).toBe(0);
     expect(b.position.x).toBe(5);
     expect(fired).toHaveLength(1);
+  });
+
+  it('stacks a static solid that has sunk into the one below it', () => {
+    const lower = box(0, 100, { solid: true, static: true });
+    const upper = box(2, 93, { solid: true, static: true });
+    upper.velocity.y = 20;
+    run([upper, lower]);
+    expect(upper.position.y).toBe(90);
+    expect(upper.velocity.y).toBe(0);
+    expect(upper.grounded).toBe(true);
+    expect(lower.position.y).toBe(100);
   });
 
   it('only reports non-solid overlaps without moving anything', () => {

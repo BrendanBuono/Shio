@@ -1,10 +1,13 @@
 import type { Component, GameObject } from '../core/GameObject';
+import type { Rect } from '../physics/Aabb';
 
 /** The bounds objects are kept inside. Objects stand on `floorY`, which is at or above `height`. */
 export interface World {
   readonly width: number;
   readonly height: number;
   readonly floorY: number;
+  /** The part of the world currently on screen, when there is a camera. */
+  readonly viewport?: Rect;
 }
 
 export interface PhysicsOptions {
@@ -35,9 +38,9 @@ export class PhysicsComponent implements Component {
     if (position.y >= floor) {
       position.y = floor;
       if (velocity.y > 0) velocity.y = 0;
-      owner.grounded = true;
+      owner.support = true;
     } else {
-      owner.grounded = false;
+      owner.support = false;
     }
 
     const rightWall = this.world.width - size.x;

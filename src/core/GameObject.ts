@@ -28,9 +28,17 @@ export class GameObject {
   /** Pixels per second squared. */
   readonly acceleration = new Vector2();
   readonly size = new Vector2(20, 20);
+  /**
+   * Resting on the floor or on a solid, as of the end of the last completed step.
+   * Stable for the whole of the current step, whatever order components run in.
+   */
   grounded = false;
+  /** Scratch flag physics and collision write during a step; `endStep` commits it to `grounded`. */
+  support = false;
   /** Null means the object takes no part in collision. */
   collider: Collider | null = null;
+  /** Drawn in screen coordinates, unaffected by the camera. For HUD elements. */
+  screenSpace = false;
   /** Free-form labels other objects can test, such as 'player' or 'enemy'. */
   readonly tags = new Set<string>();
   private readonly components: Component[] = [];
@@ -56,6 +64,11 @@ export class GameObject {
     for (const component of this.components) {
       component.update(this, stepSeconds);
     }
+  }
+
+  /** Commits this step's support into `grounded`. The game calls it after collisions are resolved. */
+  endStep(): void {
+    this.grounded = this.support;
   }
 
   get bounds(): Rect {

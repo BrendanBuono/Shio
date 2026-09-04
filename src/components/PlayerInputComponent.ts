@@ -1,5 +1,7 @@
 import type { Component, GameObject } from '../core/GameObject';
 import { Key, type KeyboardInput } from '../core/KeyboardInput';
+import { PlayerJumpedEvent } from '../events/ActorEvents';
+import type { EventManager } from '../events/EventManager';
 
 export interface PlayerInputOptions {
   /** Horizontal speed while a direction key is held, in pixels per second. Defaults to 240. */
@@ -16,6 +18,8 @@ export class PlayerInputComponent implements Component {
   constructor(
     private readonly input: KeyboardInput,
     options: PlayerInputOptions = {},
+    /** When given, a PlayerJumpedEvent is fired on every jump. */
+    private readonly events?: EventManager,
   ) {
     this.walkSpeed = options.walkSpeed ?? 240;
     this.jumpSpeed = options.jumpSpeed ?? 520;
@@ -29,6 +33,7 @@ export class PlayerInputComponent implements Component {
 
     if (owner.grounded && (this.input.wasPressed(Key.Up) || this.input.wasPressed(Key.Space))) {
       owner.velocity.y = -this.jumpSpeed;
+      this.events?.fire(new PlayerJumpedEvent(owner));
     }
   }
 }

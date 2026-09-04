@@ -15,6 +15,7 @@ export class Label extends GameObject {
     options: LabelOptions = {},
   ) {
     super();
+    this.screenSpace = true;
     this.font = options.font ?? '12px monospace';
     this.color = options.color ?? '#ffffff';
   }

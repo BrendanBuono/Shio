@@ -23,8 +23,14 @@ describe('parseGameDefinition', () => {
     expect(def.sprites[1]?.animations).toEqual({});
   });
 
+  it('carries an optional level path', () => {
+    expect(parseGameDefinition({ sprites: [] }).level).toBeUndefined();
+    expect(parseGameDefinition({ sprites: [], level: 'level1.json' }).level).toBe('level1.json');
+  });
+
   it.each([
     [null, 'must be an object'],
+    [{ sprites: [], level: '' }, 'level must be a non-empty string'],
     [{}, 'sprites must be an array'],
     [{ sprites: [{}] }, 'sprites[0].name'],
     [{ sprites: [{ name: 'a', source: '', frameWidth: 16, frameHeight: 16 }] }, 'sprites[0].source'],

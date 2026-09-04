@@ -22,3 +22,16 @@ export class PlayerRespawnEvent implements GameEvent {
   readonly type = EventType.PlayerRespawn;
   constructor(readonly player: GameObject) {}
 }
+
+export class PlayerJumpedEvent implements GameEvent {
+  readonly type = EventType.PlayerJumped;
+  constructor(readonly player: GameObject) {}
+}
+
+export class EnemyStompedEvent implements GameEvent {
+  readonly type = EventType.EnemyStomped;
+  constructor(
+    readonly enemy: GameObject,
+    readonly player: GameObject,
+  ) {}
+}

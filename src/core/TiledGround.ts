@@ -37,7 +37,10 @@ export class TiledGround extends GameObject {
 
   override draw(ctx: CanvasRenderingContext2D, _alpha: number): void {
     const { tileWidth, tileHeight, scale } = this;
-    for (let x = 0; x < this.world.width; x += tileWidth) {
+    const view = this.world.viewport;
+    const first = view ? Math.max(0, Math.floor(view.x / tileWidth) * tileWidth) : 0;
+    const end = view ? Math.min(this.world.width, view.x + view.width + tileWidth) : this.world.width;
+    for (let x = first; x < end; x += tileWidth) {
       this.sheet.draw(ctx, this.topFrame, x, this.world.floorY, { scale });
       for (let y = this.world.floorY + tileHeight; y < this.world.height; y += tileHeight) {
         this.sheet.draw(ctx, this.fillFrame, x, y, { scale });

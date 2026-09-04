@@ -1,4 +1,5 @@
 {
+  "level": "levels/level1.json",
   "sprites": [
     {
       "name": "player",
@@ -6,9 +7,27 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {
-        "idle": { "frames": [0], "fps": 1 },
-        "walk": { "frames": [1, 2, 3, 4], "fps": 10 },
-        "jump": { "frames": [5], "fps": 1 }
+        "idle": {
+          "frames": [
+            0
+          ],
+          "fps": 1
+        },
+        "walk": {
+          "frames": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 10
+        },
+        "jump": {
+          "frames": [
+            5
+          ],
+          "fps": 1
+        }
       }
     },
     {
@@ -17,8 +36,19 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {
-        "walk": { "frames": [0, 1], "fps": 4 },
-        "squashed": { "frames": [2], "fps": 1 }
+        "walk": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 4
+        },
+        "squashed": {
+          "frames": [
+            2
+          ],
+          "fps": 1
+        }
       }
     },
     {
@@ -27,7 +57,12 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {
-        "crate": { "frames": [2], "fps": 1 }
+        "crate": {
+          "frames": [
+            2
+          ],
+          "fps": 1
+        }
       }
     }
   ]

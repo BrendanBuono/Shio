@@ -6,6 +6,7 @@ export const Key = {
   Down: 'ArrowDown',
   Space: 'Space',
   Escape: 'Escape',
+  Mute: 'KeyM',
 } as const;
 
 export interface KeyboardInputOptions {

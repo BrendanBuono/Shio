@@ -1,5 +1,5 @@
 import type { Component, GameObject } from '../core/GameObject';
-import { PlayerDiedEvent } from '../events/ActorEvents';
+import { EnemyStompedEvent, PlayerDiedEvent } from '../events/ActorEvents';
 import type { CollisionEvent } from '../events/CollisionEvent';
 import type { EventManager } from '../events/EventManager';
 import { SQUASHED } from './EnemyComponent';
@@ -43,7 +43,9 @@ export class PlayerRulesComponent implements Component {
       other.tags.add(SQUASHED);
       owner.velocity.y = -this.bounceSpeed;
       owner.grounded = false;
+      owner.support = false;
       this.stomps++;
+      this.events.fire(new EnemyStompedEvent(other, owner));
     } else {
       this.events.queue(new PlayerDiedEvent(owner));
     }

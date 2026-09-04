@@ -7,4 +7,6 @@ export enum EventType {
   ActorDestroyed = 'ACTOR_DESTROYED',
   InputStarted = 'INPUT_STARTED',
   InputStopped = 'INPUT_STOPPED',
+  PlayerJumped = 'PLAYER_JUMPED',
+  EnemyStomped = 'ENEMY_STOMPED',
 }
