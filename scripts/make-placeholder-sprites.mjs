@@ -19,6 +19,10 @@ const palette = {
   G: [126, 200, 80, 255], // grass highlight
   d: [141, 90, 59, 255], // dirt
   D: [107, 66, 38, 255], // dirt speck
+  c: [196, 140, 76, 255], // crate face
+  C: [120, 78, 38, 255], // crate edge
+  e: [108, 196, 88, 255], // slime body
+  E: [64, 140, 56, 255], // slime shadow
 };
 
 const body = [
@@ -52,11 +56,90 @@ const playerFrames = [
   [...body, ...legs.tucked], // 5 jump
 ];
 
+const slime = {
+  tall: [
+    '................',
+    '................',
+    '................',
+    '................',
+    '.....kkkkkk.....',
+    '...kkeeeeeekk...',
+    '..keeeeeeeeeek..',
+    '..keewkeeewkek..',
+    '..keewkeeewkek..',
+    '.keeeeeeeeeeeek.',
+    '.keeeeeeeeeeeek.',
+    '.kEeeeeeeeeeeEk.',
+    '.kEEeeeeeeeeEEk.',
+    '..kEEEEEEEEEEk..',
+    '...kkkkkkkkkk...',
+    '................',
+  ],
+  wide: [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '....kkkkkkkk....',
+    '..kkeeeeeeeekk..',
+    '.keeewkeeeewkek.',
+    '.keeewkeeeewkek.',
+    'keeeeeeeeeeeeeek',
+    'kEeeeeeeeeeeeeEk',
+    'kEEeeeeeeeeeeEEk',
+    '.kEEEEEEEEEEEEk.',
+    '..kkkkkkkkkkkk..',
+    '................',
+  ],
+  squashed: [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '....kkkkkkkk....',
+    '.kkkeeeeeeeekkk.',
+    'kEEEeeeeeeeeEEEk',
+    'kEEEEEEEEEEEEEEk',
+    '.kkkkkkkkkkkkkk.',
+  ],
+};
+
+const enemyFrames = [slime.tall, slime.wide, slime.squashed]; // 0-1 walk, 2 squashed
+
+const crate = [
+  'CCCCCCCCCCCCCCCC',
+  'CccccccccccccccC',
+  'CcCccccccccccCcC',
+  'CccCccccccccCccC',
+  'CcccCccccccCcccC',
+  'CccccCccccCccccC',
+  'CcccccCccCcccccC',
+  'CccccccCCcccccccC'.slice(0, 16),
+  'CccccccCCcccccccC'.slice(0, 16),
+  'CcccccCccCcccccC',
+  'CccccCccccCccccC',
+  'CcccCccccccCcccC',
+  'CccCccccccccCccC',
+  'CcCccccccccccCcC',
+  'CccccccccccccccC',
+  'CCCCCCCCCCCCCCCC',
+];
+
 const grassTop = ['gGggGgGggGgGgGgG', 'ggGgggGggGggGggg'];
 const dirtRow = (y) => Array.from({ length: 16 }, (_, x) => ((x * 7 + y * 13) % 11 === 0 ? 'D' : 'd')).join('');
 const tileFrames = [
   [...grassTop, ...Array.from({ length: 14 }, (_, i) => dirtRow(i + 2))], // 0 grass top
   Array.from({ length: 16 }, (_, i) => dirtRow(i)), // 1 dirt fill
+  crate, // 2 crate
 ];
 
 function encodeSheet(frames) {
@@ -122,4 +205,7 @@ function encodePng(width, height, raw) {
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, 'player.png'), encodeSheet(playerFrames));
 writeFileSync(join(outDir, 'tiles.png'), encodeSheet(tileFrames));
-console.log(`wrote player.png (${playerFrames.length} frames) and tiles.png (${tileFrames.length} frames) to ${outDir}`);
+writeFileSync(join(outDir, 'enemy.png'), encodeSheet(enemyFrames));
+console.log(
+  `wrote player.png (${playerFrames.length} frames), tiles.png (${tileFrames.length} frames) and enemy.png (${enemyFrames.length} frames) to ${outDir}`,
+);

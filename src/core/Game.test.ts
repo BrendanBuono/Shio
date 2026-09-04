@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PhysicsComponent } from '../components/PhysicsComponent';
+import { ActorDestroyedEvent } from '../events/ActorEvents';
 import { EventType } from '../events/EventType';
 import { GamePausedEvent } from '../events/GamePausedEvent';
+import { GameObject } from './GameObject';
 import { Box } from './Box';
 import { Game } from './Game';
 import { Key } from './KeyboardInput';
@@ -120,6 +122,32 @@ describe('Game', () => {
     game.render(0, 1 / 30);
     expect(game.fps).toBeGreaterThan(30);
     expect(game.fps).toBeLessThan(60);
+  });
+
+  it('resolves collisions after objects move and tells both parties', () => {
+    const crate = new GameObject().moveTo(100, 432);
+    crate.size.set(48, 48);
+    crate.collider = { solid: true, static: true };
+    const hero = new Box().moveTo(110, 380).addComponent(new PhysicsComponent(game));
+    hero.collider = { solid: true };
+    const heard: string[] = [];
+    hero.addComponent({ update: () => undefined, onCollision: (_o, e) => heard.push(`hero:${e.sideOf(hero)}`) });
+    crate.addComponent({ update: () => undefined, onCollision: (_o, e) => heard.push(`crate:${e.sideOf(crate)}`) });
+    game.add(crate).add(hero);
+    for (let i = 0; i < 60; i++) game.step(1 / 60);
+    expect(hero.position.y).toBe(432 - 20);
+    expect(hero.grounded).toBe(true);
+    expect(heard[0]).toBe('crate:top');
+    expect(heard[1]).toBe('hero:bottom');
+  });
+
+  it('removes an actor when an ActorDestroyed event is drained', () => {
+    const box = new Box();
+    game.add(box);
+    game.events.queue(new ActorDestroyedEvent(box));
+    expect(game.objects).toContain(box);
+    game.step(1 / 60);
+    expect(game.objects).not.toContain(box);
   });
 
   it('removes objects', () => {

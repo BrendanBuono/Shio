@@ -12,10 +12,23 @@
       }
     },
     {
+      "name": "enemy",
+      "source": "sprites/enemy.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "walk": { "frames": [0, 1], "fps": 4 },
+        "squashed": { "frames": [2], "fps": 1 }
+      }
+    },
+    {
       "name": "tiles",
       "source": "sprites/tiles.png",
       "frameWidth": 16,
-      "frameHeight": 16
+      "frameHeight": 16,
+      "animations": {
+        "crate": { "frames": [2], "fps": 1 }
+      }
     }
   ]
 }

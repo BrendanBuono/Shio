@@ -1,7 +1,10 @@
 import type { World } from '../components/PhysicsComponent';
+import type { ActorDestroyedEvent } from '../events/ActorEvents';
+import type { CollisionEvent } from '../events/CollisionEvent';
 import { EventManager } from '../events/EventManager';
 import { EventType } from '../events/EventType';
 import { GamePausedEvent } from '../events/GamePausedEvent';
+import { CollisionSystem } from '../physics/CollisionSystem';
 import { GameLoop } from './GameLoop';
 import type { GameObject } from './GameObject';
 import { Key, KeyboardInput } from './KeyboardInput';
@@ -22,6 +25,7 @@ export class Game implements World {
   readonly events = new EventManager();
   readonly input = new KeyboardInput();
   readonly objects: GameObject[] = [];
+  readonly collisions = new CollisionSystem();
   paused = false;
   width: number;
   height: number;
@@ -48,6 +52,8 @@ export class Game implements World {
       ...(options.stepSeconds !== undefined ? { stepSeconds: options.stepSeconds } : {}),
     });
     this.events.register(this, this.onGamePaused, EventType.GamePaused);
+    this.events.register(this, this.onCollision, EventType.Collision);
+    this.events.register(this, this.onActorDestroyed, EventType.ActorDestroyed);
   }
 
   get isRunning(): boolean {
@@ -100,9 +106,12 @@ export class Game implements World {
     this.events.update(this.eventBudgetMillis);
 
     if (!this.paused) {
-      for (const object of this.objects) {
+      // Snapshot so handlers may add or remove objects mid-step without upsetting iteration.
+      const objects = [...this.objects];
+      for (const object of objects) {
         object.update(stepSeconds);
       }
+      this.collisions.resolve(objects, this.events);
     }
     this.input.flush();
   }
@@ -138,6 +147,15 @@ export class Game implements World {
 
   private onGamePaused(this: Game): void {
     this.paused = !this.paused;
+  }
+
+  private onCollision(this: Game, event: CollisionEvent): void {
+    event.a.onCollision(event);
+    event.b.onCollision(event);
+  }
+
+  private onActorDestroyed(this: Game, event: ActorDestroyedEvent): void {
+    this.remove(event.actor);
   }
 
   private readonly resizeToWindow = (): void => {

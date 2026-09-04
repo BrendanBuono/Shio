@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { CollisionEvent } from '../events/CollisionEvent';
 import type { Component } from './GameObject';
 import { GameObject } from './GameObject';
 
@@ -34,6 +35,22 @@ describe('GameObject', () => {
     const ctx = {} as CanvasRenderingContext2D;
     obj.draw(ctx, 0.5);
     expect(calls).toEqual(['a', 'b']);
+  });
+
+  it('exposes its bounds as a rectangle', () => {
+    const obj = new GameObject().moveTo(3, 4);
+    obj.size.set(5, 6);
+    expect(obj.bounds).toEqual({ x: 3, y: 4, width: 5, height: 6 });
+  });
+
+  it('forwards collisions to components that listen', () => {
+    const obj = new GameObject();
+    const other = new GameObject();
+    const listener = vi.fn();
+    obj.addComponent({ update: () => undefined }).addComponent({ update: () => undefined, onCollision: listener });
+    const event = new CollisionEvent(obj, other, 'x', 'left');
+    obj.onCollision(event);
+    expect(listener).toHaveBeenCalledWith(obj, event);
   });
 
   it('moveTo resets interpolation', () => {
