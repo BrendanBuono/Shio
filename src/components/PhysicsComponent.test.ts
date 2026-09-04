@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { GameObject } from '../core/GameObject';
 import { PhysicsComponent } from './PhysicsComponent';
 
-const world = { width: 800, height: 600 };
+const world = { width: 800, height: 600, floorY: 560 };
 
 function simulate(seconds: number, step: number, setup?: (o: GameObject) => void): GameObject {
   const obj = new GameObject().moveTo(100, 0).addComponent(new PhysicsComponent(world, { gravity: 1000 }));
@@ -35,7 +35,7 @@ describe('PhysicsComponent', () => {
 
   it('lands on the floor, stops falling and reports grounded', () => {
     const obj = simulate(3, 1 / 60);
-    expect(obj.position.y).toBe(world.height - obj.size.y);
+    expect(obj.position.y).toBe(world.floorY - obj.size.y);
     expect(obj.velocity.y).toBe(0);
     expect(obj.grounded).toBe(true);
   });
@@ -45,7 +45,7 @@ describe('PhysicsComponent', () => {
     obj.velocity.y = -300;
     obj.update(1 / 60);
     expect(obj.grounded).toBe(false);
-    expect(obj.position.y).toBeLessThan(world.height - obj.size.y);
+    expect(obj.position.y).toBeLessThan(world.floorY - obj.size.y);
   });
 
   it('cannot leave through the side walls', () => {

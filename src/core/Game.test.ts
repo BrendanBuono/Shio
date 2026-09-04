@@ -16,6 +16,7 @@ function fakeContext() {
     font: '',
     textAlign: 'start',
     textBaseline: 'alphabetic',
+    imageSmoothingEnabled: true,
   };
 }
 
@@ -48,6 +49,19 @@ describe('Game', () => {
   it('takes its world size from the canvas', () => {
     expect(game.width).toBe(640);
     expect(game.height).toBe(480);
+    expect(game.floorY).toBe(480);
+  });
+
+  it('raises the floor by the ground height', () => {
+    game.groundHeight = 48;
+    expect(game.floorY).toBe(432);
+    game.resize(800, 600);
+    expect(game.floorY).toBe(552);
+  });
+
+  it('turns image smoothing off for every render', () => {
+    game.render(0, 1 / 60);
+    expect(ctx.imageSmoothingEnabled).toBe(false);
   });
 
   it('toggles pause through the event system when Escape is pressed', () => {

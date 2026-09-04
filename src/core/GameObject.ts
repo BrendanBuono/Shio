@@ -4,6 +4,7 @@ import { createId } from '../utility/uuid';
 /** Behaviour attached to a GameObject. Components run in the order they were added. */
 export interface Component {
   update(owner: GameObject, stepSeconds: number): void;
+  draw?(owner: GameObject, ctx: CanvasRenderingContext2D, alpha: number): void;
 }
 
 export class GameObject {
@@ -47,7 +48,10 @@ export class GameObject {
     return Vector2.lerp(this.previousPosition, this.position, alpha);
   }
 
-  draw(_ctx: CanvasRenderingContext2D, _alpha: number): void {
-    // Base objects are invisible. Subclasses decide how to draw themselves.
+  /** Draws each component that knows how to draw. Subclasses may override to draw themselves. */
+  draw(ctx: CanvasRenderingContext2D, alpha: number): void {
+    for (const component of this.components) {
+      component.draw?.(this, ctx, alpha);
+    }
   }
 }

@@ -1,0 +1,21 @@
+{
+  "sprites": [
+    {
+      "name": "player",
+      "source": "sprites/player.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": { "frames": [0], "fps": 1 },
+        "walk": { "frames": [1, 2, 3, 4], "fps": 10 },
+        "jump": { "frames": [5], "fps": 1 }
+      }
+    },
+    {
+      "name": "tiles",
+      "source": "sprites/tiles.png",
+      "frameWidth": 16,
+      "frameHeight": 16
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 import type { Component, GameObject } from '../core/GameObject';
 
-/** The bounds objects are kept inside. The floor is at `height`. */
+/** The bounds objects are kept inside. Objects stand on `floorY`, which is at or above `height`. */
 export interface World {
   readonly width: number;
   readonly height: number;
+  readonly floorY: number;
 }
 
 export interface PhysicsOptions {
@@ -30,7 +31,7 @@ export class PhysicsComponent implements Component {
     position.x += velocity.x * stepSeconds;
     position.y += velocity.y * stepSeconds;
 
-    const floor = this.world.height - size.y;
+    const floor = this.world.floorY - size.y;
     if (position.y >= floor) {
       position.y = floor;
       if (velocity.y > 0) velocity.y = 0;

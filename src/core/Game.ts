@@ -25,6 +25,8 @@ export class Game implements World {
   paused = false;
   width: number;
   height: number;
+  /** Height of the ground band at the bottom of the world. Objects stand on top of it. */
+  groundHeight = 0;
   /** Smoothed frames per second, updated every render. */
   fps = 0;
   private readonly loop: GameLoop;
@@ -50,6 +52,10 @@ export class Game implements World {
 
   get isRunning(): boolean {
     return this.loop.isRunning;
+  }
+
+  get floorY(): number {
+    return this.height - this.groundHeight;
   }
 
   add(object: GameObject): this {
@@ -107,6 +113,8 @@ export class Game implements World {
       this.fps = this.fps === 0 ? instantaneous : this.fps * 0.9 + instantaneous * 0.1;
     }
     const { ctx } = this;
+    // Resizing resets this, so it is set every frame. Keeps scaled pixel art crisp.
+    ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, this.width, this.height);
     for (const object of this.objects) {
       object.draw(ctx, alpha);

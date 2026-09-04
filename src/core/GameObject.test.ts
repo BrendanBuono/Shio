@@ -25,6 +25,17 @@ describe('GameObject', () => {
     expect(obj.renderPosition(0.5)).toEqual({ x: 5, y: 10 });
   });
 
+  it('draws components that can draw, in order, and skips those that cannot', () => {
+    const calls: string[] = [];
+    const obj = new GameObject()
+      .addComponent({ update: () => undefined })
+      .addComponent({ update: () => undefined, draw: () => calls.push('a') })
+      .addComponent({ update: () => undefined, draw: vi.fn(() => calls.push('b')) });
+    const ctx = {} as CanvasRenderingContext2D;
+    obj.draw(ctx, 0.5);
+    expect(calls).toEqual(['a', 'b']);
+  });
+
   it('moveTo resets interpolation', () => {
     const obj = new GameObject().moveTo(100, 100);
     expect(obj.renderPosition(0)).toEqual({ x: 100, y: 100 });
